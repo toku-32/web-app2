@@ -1,1 +1,323 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>データ量と通信速度をまなぼう</title>
+  <meta name="description" content="ビット・バイトなどデータ量の単位と、ダウンロード時間の計算方法を、たとえ話とシミュレーターで学べるページです。">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E💧%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#units">本文へジャンプ</a>
 
+  <header class="hero">
+    <div class="wrap">
+      <h1>データ量と<wbr>通信速度を<wbr>まなぼう</h1>
+      <p class="hero-lead">ビットとバイトの関係から、ダウンロードにかかる時間の計算まで。最後は回線をえらんで、バケツに水がたまるようすでたしかめよう。</p>
+      <nav class="hero-nav" aria-label="ページ内の目次">
+        <a href="#units"><span>データ量の単位</span><small>高校生向け</small></a>
+        <a href="#speed"><span>通信速度の計算</span><small>小学生でもわかる</small></a>
+        <a href="#lab"><span>ためしてみよう</span><small>シミュレーター</small></a>
+      </nav>
+    </div>
+    <svg class="wave" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,30 C180,60 360,0 540,30 C720,60 900,0 1080,30 C1260,60 1350,20 1440,30 L1440,60 L0,60 Z"/>
+    </svg>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ 1. データ量の単位（高校生向け） ============ -->
+    <section class="sec" id="units" aria-labelledby="units-h">
+      <div class="wrap">
+        <h2 id="units-h">データ量の単位を、身近なものでつかもう<span class="tag">高校生向け</span></h2>
+        <p class="prose">データ量の単位は種類が多くて、計算でつまずきがちです。でも、覚えることは2つだけ。<b>「いちばん小さい単位 bit」</b>と<b>「6段の階段」</b>です。まずは bit から見ていきましょう。</p>
+
+        <h3>bit は「スイッチ1個」</h3>
+        <p class="prose">コンピュータの中身は、ONかOFFかのスイッチの集まりです。ONを 1、OFFを 0 と書き、スイッチ1個ぶんの情報が <b>1 bit（ビット）</b>。そして<b>スイッチ8個ぶんが 1 byte（バイト）</b>です。下のスイッチをクリックして、数と文字が変わるようすを見てみよう。</p>
+
+        <div class="bit-lab">
+          <div class="bits" id="bits" role="group" aria-label="8個のスイッチ"></div>
+          <dl class="readout">
+            <div><dt>2進数</dt><dd id="roBin">01000001</dd></div>
+            <div><dt>10進数</dt><dd id="roDec">65</dd></div>
+            <div><dt>文字</dt><dd id="roChar">A</dd></div>
+          </dl>
+        </div>
+
+        <p class="prose">スイッチが8個あると、ONとOFFの組み合わせは 2×2×…（8回）＝ <b>256通り</b>。半角の英数字や記号はこの中におさまるので、<b>半角1文字＝1バイト</b>と覚えておけばOKです。ひらがなや漢字は種類が多いので、1文字で2〜3バイト使います。</p>
+
+        <h3>6段の階段で整理しよう</h3>
+        <p class="prose">右へ（スマホでは下へ）進むほど大きなデータです。色がこいほど大きい、と考えてください。</p>
+
+        <ol class="ladder">
+          <li style="--i:0;--c:#bfe0fd;--fg:var(--ink)">
+            <span class="u-name">bit</span><span class="u-ja">ビット</span>
+            <span class="u-x">いちばん小さい</span>
+            <span class="u-eg">スイッチ1個。0か1かを表す、ほんの1かけら。</span>
+          </li>
+          <li style="--i:1;--c:#8ec7f9;--fg:var(--ink)">
+            <span class="u-name">B</span><span class="u-ja">バイト</span>
+            <span class="u-x">bit の 8倍</span>
+            <span class="u-eg">半角の文字1つ（A、7、@）。ひらがな・漢字は1文字2〜3B。</span>
+          </li>
+          <li style="--i:2;--c:#5aa9f2;--fg:var(--ink)">
+            <span class="u-name">KB</span><span class="u-ja">キロバイト</span>
+            <span class="u-x">B の 1000倍</span>
+            <span class="u-eg">文字だけの短いメール1通。原稿用紙1枚（約400字）で約1KB。</span>
+          </li>
+          <li style="--i:3;--c:#1f6fd0;--fg:#fff">
+            <span class="u-name">MB</span><span class="u-ja">メガバイト</span>
+            <span class="u-x">KB の 1000倍</span>
+            <span class="u-eg">スマホの写真1枚（3〜5MB）、音楽1曲（約4MB）。</span>
+          </li>
+          <li style="--i:4;--c:#1257b0;--fg:#fff">
+            <span class="u-name">GB</span><span class="u-ja">ギガバイト</span>
+            <span class="u-x">MB の 1000倍</span>
+            <span class="u-eg">映画1本（1〜4GB）。写真なら約250枚ぶん。</span>
+          </li>
+          <li style="--i:5;--c:#0b3d7a;--fg:#fff">
+            <span class="u-name">TB</span><span class="u-ja">テラバイト</span>
+            <span class="u-x">GB の 1000倍</span>
+            <span class="u-eg">映画なら約500本、写真なら約25万枚。パソコンのHDD・SSDの大きさ。</span>
+          </li>
+        </ol>
+
+        <div class="rule">
+          <p><b>階段のルール</b></p>
+          <ul>
+            <li>bit → B だけは <b>8倍</b>（8 bit ＝ 1 B）。</li>
+            <li>B → KB → MB → GB → TB は、1段ごとに <b>1000倍</b>（コンピュータ内部の数え方では <b>1024倍</b>）。</li>
+            <li>階段を<b>下る</b>（大きい単位 → 小さい単位）ときは<b>かける</b>。階段を<b>上る</b>（小さい単位 → 大きい単位）ときは<b>わる</b>。</li>
+          </ul>
+        </div>
+
+        <h3>1000倍と1024倍、どっちで計算する？</h3>
+        <p class="prose">コンピュータは2進数で動くので、2の10乗＝1024 が「キリのいい数」です。一方、人間にとってキリがいいのは1000。そこで、1000倍で数える単位（KB・MB…）と、1024倍で数える単位（KiB・MiB…と書いて区別する）が使い分けられるようになりました。ただし、教科書や試験では KB を1024倍で説明することも多いので、<b>問題文の指示を見て判断</b>しましょう。</p>
+
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">1000倍ルールと1024倍ルールの比較</caption>
+            <thead>
+              <tr><th scope="col">単位</th><th scope="col">1000倍ルール</th><th scope="col">1024倍ルール（2の10乗）</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">1 KB</th><td>1,000 B</td><td>1,024 B</td></tr>
+              <tr><th scope="row">1 MB</th><td>1,000 KB</td><td>1,024 KB</td></tr>
+              <tr><th scope="row">1 GB</th><td>1,000 MB</td><td>1,024 MB</td></tr>
+              <tr><th scope="row">1 TB</th><td>1,000 GB</td><td>1,024 GB</td></tr>
+              <tr><th scope="row">1 TB をバイトで</th><td>1,000,000,000,000 B</td><td>1,099,511,627,776 B</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="prose small">段が上がるほど差が広がり、TBでは約10％ちがいます。1TBのハードディスクが、パソコンで約931GBと表示されることがあるのは、メーカー（1000倍）とパソコン（1024倍）で数え方がちがうためです。</p>
+
+        <h3>換算してみよう</h3>
+        <p class="prose">数と単位をえらぶと、階段を何段動くかも表示されます。</p>
+
+        <div class="conv">
+          <label class="field"><span>数</span><input id="cvVal" type="number" min="0" step="any" value="2" inputmode="decimal"></label>
+          <label class="field"><span>もとの単位</span><select id="cvFrom"></select></label>
+          <label class="field"><span>変換したい単位</span><select id="cvTo"></select></label>
+          <fieldset class="seg">
+            <legend>数え方</legend>
+            <div class="seg-row">
+              <label><input type="radio" name="base" value="1000" checked><span>1000倍</span></label>
+              <label><input type="radio" name="base" value="1024"><span>1024倍</span></label>
+            </div>
+          </fieldset>
+        </div>
+        <p class="conv-out" aria-live="polite"><output id="cvOut" for="cvVal cvFrom cvTo"></output></p>
+        <p class="conv-path" id="cvPath"></p>
+
+        <h3>練習問題</h3>
+        <details class="qa">
+          <summary>問1　3GBの動画は、何MBですか？</summary>
+          <p class="qa-a">GB → MB は階段を1段下るので <b>×1000</b>。答えは <b>3,000 MB</b>。（1024倍ルールなら 3 × 1024 ＝ 3,072 MB）</p>
+        </details>
+        <details class="qa">
+          <summary>問2　2MBの写真は、何ビットですか？</summary>
+          <p class="qa-a">2 MB ＝ 2,000 KB ＝ 2,000,000 B。バイトからビットにするので <b>×8</b>。答えは <b>16,000,000 bit</b>。</p>
+        </details>
+        <details class="qa">
+          <summary>問3　全角500文字（1文字2バイトとする）の文章は、何KBですか？</summary>
+          <p class="qa-a">500 × 2 ＝ 1,000 B。B → KB は階段を1段上るので <b>÷1000</b>。答えは <b>1 KB</b>。（1024倍ルールなら 約0.98 KB）</p>
+        </details>
+
+        <div class="rule rule--warn">
+          <p><b>b と B を見分けよう</b></p>
+          <p>小文字の <b>b</b> は bit、大文字の <b>B</b> は Byte です。「Mbps」は1秒あたりのメガ<b>ビット</b>、「MB/s」は1秒あたりのメガ<b>バイト</b>で、<b>8倍ちがいます</b>。この続きは、次の「通信速度」で使います。</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="sep sep--p2s" aria-hidden="true">
+      <svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0,30 C180,60 360,0 540,30 C720,60 900,0 1080,30 C1260,60 1350,20 1440,30 L1440,60 L0,60 Z"/></svg>
+    </div>
+
+    <!-- ============ 2. 通信速度の計算（小学生でもわかる） ============ -->
+    <section class="sec sec--sky" id="speed" aria-labelledby="speed-h">
+      <div class="wrap">
+        <h2 id="speed-h">ダウンロードは何秒かかる？<span class="tag">小学生でもわかる</span></h2>
+        <p class="prose">インターネットからファイルを受けとることを「ダウンロード」というよ。かかる時間は、かんたんな計算で出せるんだ。まずは、たとえ話から。</p>
+
+        <h3>たとえ話①　ホースとバケツ</h3>
+        <dl class="map">
+          <dt>バケツ</dt><dd>ダウンロードするファイル。バケツが大きいほど、データ量が多い。</dd>
+          <dt>水</dt><dd>データそのもの。</dd>
+          <dt>ホースの太さ</dt><dd>通信速度。太いほど、1秒にたくさんの水が出る。</dd>
+          <dt>いっぱいになるまで</dt><dd>ダウンロードにかかる時間。</dd>
+        </dl>
+        <p class="prose">小さなバケツ（写真）なら、細いホースでもすぐいっぱいになるよね。大きなバケツ（映画）を細いホースでうめようとすると、とても時間がかかるんだ。</p>
+
+        <h3>たとえ話②　道路とトラック</h3>
+        <dl class="map">
+          <dt>荷物の数</dt><dd>データ量。</dd>
+          <dt>1秒に通れる荷物の数</dt><dd>通信速度。道路が広くて、トラックが多いほど大きくなる。</dd>
+          <dt>ぜんぶとどくまで</dt><dd>ダウンロードにかかる時間。</dd>
+        </dl>
+        <p class="prose">算数で習った「道のり ÷ 速さ ＝ 時間」と、まったく同じ形だよ。</p>
+
+        <h3>時間を出す公式</h3>
+        <p class="formula"><span>かかる時間（秒）</span> <span>＝ データ量</span> <span>÷ 1秒に送れる量</span></p>
+
+        <div class="ex">
+          <p class="ex-q"><b>れい1</b>　10MBの写真を、1秒に2MB送れる回線で送ると何秒？</p>
+          <p class="eq"><span>10 MB</span>÷<span>2 MB/秒</span>＝<b>5秒</b></p>
+        </div>
+        <div class="ex">
+          <p class="ex-q"><b>れい2</b>　100MBの動画を、1秒に5MB送れる回線で送ると何秒？</p>
+          <p class="eq"><span>100 MB</span>÷<span>5 MB/秒</span>＝<b>20秒</b></p>
+        </div>
+
+        <h3>ちょっと待って！「ものさし」をそろえよう</h3>
+        <p class="prose">スマホやWi-Fiの速さは「30Mbps」のように書いてあることが多いよ。これは1秒に30メガ<b>ビット</b>という意味。でも、ファイルの大きさは「100MB」のように、メガ<b>バイト</b>で書くよね。</p>
+        <p class="prose">ビットは「バラのみかん」、バイトは「8こ入りの箱」だと思ってね。<b>1バイト＝8ビット</b>。バラで数えるのと、箱で数えるのでは、数がちがってしまうよね。だから、計算の前に「箱（バイト）」にそろえるんだ。</p>
+
+        <div class="rule rule--warn">
+          <p><b>Mbps（ビット）÷ 8 ＝ MB/秒（バイト）</b></p>
+        </div>
+
+        <ol class="steps">
+          <li>ファイルの大きさを <b>MB</b> にそろえる。（GBなら ×1000、KBなら ÷1000）</li>
+          <li>回線の速さ（Mbps）を <b>8でわって</b>、1秒に何MB送れるか（MB/秒）にする。</li>
+          <li>データ量 ÷ 1秒に送れる量 ＝ <b>時間（秒）</b>。</li>
+        </ol>
+
+        <div class="ex">
+          <p class="ex-q"><b>れい3</b>　400MBのゲームのアップデートを、80Mbpsの回線で受けとると何秒？</p>
+          <p class="eq"><span>80 Mbps</span>÷<span>8</span>＝<b>10 MB/秒</b></p>
+          <p class="eq"><span>400 MB</span>÷<span>10 MB/秒</span>＝<b>40秒</b></p>
+        </div>
+        <p class="prose small">ほんとうは、人が多い時間などは回線がおそくなるから、計算より少し長くかかることが多いよ。</p>
+      </div>
+    </section>
+
+    <div class="sep sep--s2p" aria-hidden="true">
+      <svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0,30 C180,0 360,60 540,30 C720,0 900,60 1080,30 C1260,0 1350,40 1440,30 L1440,60 L0,60 Z"/></svg>
+    </div>
+
+    <!-- ============ 3. シミュレーター ============ -->
+    <section class="sec" id="lab" aria-labelledby="lab-h">
+      <div class="wrap">
+        <h2 id="lab-h">ためしてみよう：何秒でダウンロードできる？</h2>
+        <p class="prose">ダウンロードするものと回線をえらぶと、かかる時間が出るよ。「スタート」をおすと、バケツに水がたまっていく。長い時間がかかるときは早送りで見せるよ。回線が速いほど、ホースが太くなるのにも注目してね。</p>
+
+        <div class="lab-grid">
+          <div class="controls">
+            <fieldset class="pick">
+              <legend>1. ダウンロードするものをえらぶ</legend>
+              <div class="chips" id="fileChips"></div>
+              <div class="custom">
+                <label for="fileNum">じぶんで入力</label>
+                <div class="custom-row">
+                  <input id="fileNum" type="number" min="0" step="any" inputmode="decimal">
+                  <select id="fileUnit" aria-label="データ量の単位">
+                    <option value="0.001">KB</option>
+                    <option value="1" selected>MB</option>
+                    <option value="1000">GB</option>
+                    <option value="1000000">TB</option>
+                  </select>
+                </div>
+              </div>
+              <p class="hint" id="fileMsg" role="alert"></p>
+            </fieldset>
+
+            <fieldset class="pick">
+              <legend>2. 回線をえらぶ</legend>
+              <div class="chips" id="lineChips"></div>
+              <div class="custom">
+                <label for="speedRange">スピードをじぶんで決める：<output id="speedOut" for="speedRange"></output></label>
+                <input id="speedRange" type="range" min="0" max="1000" step="1" value="500">
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="stage" id="stage">
+            <svg id="scene" viewBox="0 0 600 305" role="img" aria-label="ホースからバケツに水がたまるようす">
+              <defs>
+                <clipPath id="bucketClip"><polygon points="340,168 520,168 502,292 358,292"/></clipPath>
+              </defs>
+              <!-- バケツ（うしろ） -->
+              <polygon points="340,168 520,168 502,292 358,292" fill="#ffffff"/>
+              <g clip-path="url(#bucketClip)">
+                <rect id="water" x="330" y="292" width="200" height="0" fill="#2b9bff"/>
+                <g stroke="#0e2a47" stroke-opacity=".25" stroke-width="2" stroke-dasharray="6 6">
+                  <line x1="340" x2="520" y1="261" y2="261"/>
+                  <line x1="340" x2="520" y1="230" y2="230"/>
+                  <line x1="340" x2="520" y1="199" y2="199"/>
+                </g>
+              </g>
+              <!-- 落ちる水 -->
+              <line id="stream" class="stream" x1="430" y1="124" x2="430" y2="292" stroke="#2b9bff" stroke-width="10" stroke-linecap="round" stroke-dasharray="10 9"/>
+              <!-- バケツ（ふち） -->
+              <polygon points="340,168 520,168 502,292 358,292" fill="none" stroke="#0e2a47" stroke-width="6" stroke-linejoin="round"/>
+              <rect x="330" y="160" width="200" height="14" rx="7" fill="#0e2a47"/>
+              <!-- じゃ口とホース -->
+              <rect x="14" y="62" width="66" height="68" rx="12" fill="#0e2a47"/>
+              <rect x="28" y="44" width="38" height="16" rx="7" fill="#ffc233" stroke="#0e2a47" stroke-width="3"/>
+              <path id="hoseOut" d="M78 96 C190 96 210 40 300 60 S430 60 430 118" fill="none" stroke="#0e2a47" stroke-width="30"/>
+              <path id="hoseIn" d="M78 96 C190 96 210 40 300 60 S430 60 430 118" fill="none" stroke="#ffb400" stroke-width="24"/>
+            </svg>
+
+            <p class="caption">
+              <span>ホース <b id="capLine"></b></span>
+              <span>バケツ <b id="capFile"></b></span>
+            </p>
+
+            <div class="result">
+              <p class="result-label">ダウンロードにかかる時間</p>
+              <p class="result-time" id="timeBig" aria-live="polite">—</p>
+              <p class="result-sub" id="timeSub"></p>
+              <button class="go" id="goBtn" type="button">ダウンロードスタート</button>
+              <p class="status" id="status"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="calc">
+          <h3>計算のようす</h3>
+          <ol class="calc-steps" id="calcSteps"></ol>
+        </div>
+
+        <div class="compare">
+          <h3>ほかの回線だと、どうなる？</h3>
+          <p class="prose small">えらんだものを、ぜんぶの回線で送ったときの時間です。棒が長いほど時間がかかります（短い時間もわかるように、目盛りをちぢめています）。</p>
+          <ol class="cmp" id="cmp"></ol>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap">
+      <p>回線の速さは目安の数字です。実際の速さは、場所や時間帯、混みぐあいでかわります。このページの計算は、1MB＝1000KB、1B＝8bit で行っています。</p>
+    </div>
+  </footer>
+</body>
+</html>
